@@ -1,36 +1,51 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Text.Json;
 using System.Threading.Tasks;
+using Application.Command;
+using Application.DTOs;
+using Application.Query;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json.Linq;
+using RestSharp;
 
 namespace CandidateService.Controllers
 {
     public class CandidateController : Controller
     {
-        // GET: Candidates
-        public IActionResult Index()
+        private readonly ICandidateQuery candidateQuery;
+        private readonly ICandidateCommand candidateCommand;
+        private readonly IConfiguration configuration;
+
+        public CandidateController(ICandidateQuery candidateQuery,
+                                   IConfiguration configuration,
+                                   ICandidateCommand candidateCommand)
         {
-            //return View(await _context.Candidates.ToListAsync());
-            return View();
+            this.candidateQuery = candidateQuery;
+            this.configuration = configuration;
+            this.candidateCommand = candidateCommand;
         }
 
-        // GET: Candidates/Details/5
-        //public async Task<IActionResult> Details(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
+        // GET: Candidates
+        public async Task<IActionResult> Index()
+        {
+            var model = await candidateQuery.GetAllCandidatesAsync(configuration.GetValue<string>("BaseURLApi"));
+            return View(model);
+        }
 
-        //    var candidate = await _context.Candidates
-        //        .FirstOrDefaultAsync(m => m.CandidateId == id);
-        //    if (candidate == null)
-        //    {
-        //        return NotFound();
-        //    }
+        //GET: Candidates/Details/5
+        public async Task<IActionResult> Details(int? id)
+        {
+            var candidate = await candidateQuery.GetCandidateByIdAsync(configuration.GetValue<string>("BaseURLApi"), id.GetValueOrDefault(0));
 
-        //    return View(candidate);
-        //}
+            if (candidate == null)
+                return NotFound();
+
+            return View(candidate);
+        }
 
         // GET: Candidates/Create
         public IActionResult Create()
@@ -38,101 +53,73 @@ namespace CandidateService.Controllers
             return View();
         }
 
-        //// POST: Candidates/Create
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Create([Bind("CandidateId,Name,LastName,DateOfBirth,Email,PhoneNumber,Resume")] Candidate candidate)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        _context.Add(candidate);
-        //        await _context.SaveChangesAsync();
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    return View(candidate);
-        //}
+        // POST: Candidates/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([Bind("CandidateId,Name,LastName,DateOfBirth,Email,PhoneNumber,Resume")] CandidateDTO candidate)
+        {
+            if (ModelState.IsValid)
+            {
+                await candidateCommand.ExecuteCommandAsync(configuration.GetValue<string>("BaseURLApi"), candidate, Method.POST);
+                return RedirectToAction(nameof(Index));
+            }
+            return View(candidate);
+        }
 
-        //// GET: Candidates/Edit/5
-        //public async Task<IActionResult> Edit(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
+        // GET: Candidates/Edit/5
+        public async Task<IActionResult> Edit(int? id)
+        {
+            var candidate = await candidateQuery.GetCandidateByIdAsync(configuration.GetValue<string>("BaseURLApi"), id.GetValueOrDefault(0));
 
-        //    var candidate = await _context.Candidates.FindAsync(id);
-        //    if (candidate == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    return View(candidate);
-        //}
+            if (candidate == null)
+                return NotFound();
 
-        //// POST: Candidates/Edit/5
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Edit(int id, [Bind("CandidateId,Name,LastName,DateOfBirth,Email,PhoneNumber,Resume")] Candidate candidate)
-        //{
-        //    if (id != candidate.CandidateId)
-        //    {
-        //        return NotFound();
-        //    }
+            return View(candidate);
+        }
 
-        //    if (ModelState.IsValid)
-        //    {
-        //        try
-        //        {
-        //            _context.Update(candidate);
-        //            await _context.SaveChangesAsync();
-        //        }
-        //        catch (DbUpdateConcurrencyException)
-        //        {
-        //            if (!CandidateExists(candidate.CandidateId))
-        //            {
-        //                return NotFound();
-        //            }
-        //            else
-        //            {
-        //                throw;
-        //            }
-        //        }
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    return View(candidate);
-        //}
+        // POST: Candidates/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit([Bind("CandidateId,Name,LastName,DateOfBirth,Email,PhoneNumber,Resume")] CandidateDTO candidate)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    await candidateCommand.ExecuteCommandAsync(configuration.GetValue<string>("BaseURLApi"), candidate, Method.PUT);
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
 
-        //// GET: Candidates/Delete/5
-        //public async Task<IActionResult> Delete(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
+                return RedirectToAction(nameof(Index));
+            }
 
-        //    var candidate = await _context.Candidates
-        //        .FirstOrDefaultAsync(m => m.CandidateId == id);
-        //    if (candidate == null)
-        //    {
-        //        return NotFound();
-        //    }
+            return View(candidate);
+        }
 
-        //    return View(candidate);
-        //}
+        // GET: Candidates/Delete/5
+        public async Task<IActionResult> Delete(int? id)
+        {
+            var candidate = await candidateQuery.GetCandidateByIdAsync(configuration.GetValue<string>("BaseURLApi"), id.GetValueOrDefault(0));
 
-        //// POST: Candidates/Delete/5
-        //[HttpPost, ActionName("Delete")]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> DeleteConfirmed(int id)
-        //{
-        //    var candidate = await _context.Candidates.FindAsync(id);
-        //    _context.Candidates.Remove(candidate);
-        //    await _context.SaveChangesAsync();
-        //    return RedirectToAction(nameof(Index));
-        //}
+            if (candidate == null)
+                return NotFound();
 
-        //private bool CandidateExists(int id)
-        //{
-        //    return _context.Candidates.Any(e => e.CandidateId == id);
-        //}
+            return View(candidate);
+        }
+
+        // DELETE: Candidates/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var candidate = await candidateQuery.GetCandidateByIdAsync(configuration.GetValue<string>("BaseURLApi"), id);
+
+            await candidateCommand.ExecuteCommandAsync(configuration.GetValue<string>("BaseURLApi"), candidate, Method.DELETE);
+
+            return RedirectToAction(nameof(Index));
+        }
     }
 }

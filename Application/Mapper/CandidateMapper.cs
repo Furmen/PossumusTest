@@ -1,9 +1,11 @@
-﻿using CandidateService.Database.Entities;
-using Common.DTOs;
+﻿using Application.DTOs;
+using Domain.Entities;
+using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
-namespace CandidateService.Mapper
+namespace Application.Mapper
 {
     public static class CandidateMapper
     {
@@ -12,7 +14,7 @@ namespace CandidateService.Mapper
             return new Candidate
             {
                 CandidateId = candidateDTO.CandidateId,
-                DateOfBirth = candidateDTO.DateOfBirth,
+                DateOfBirth = DateTime.ParseExact("dd/MM/yyyy", candidateDTO.DateOfBirth, CultureInfo.InvariantCulture),
                 Email = candidateDTO.Email,
                 LastName = candidateDTO.LastName,
                 Name = candidateDTO.Name,
@@ -28,7 +30,7 @@ namespace CandidateService.Mapper
             return new CandidateDTO
             {
                 CandidateId = candidate.CandidateId,
-                DateOfBirth = candidate.DateOfBirth,
+                DateOfBirth = candidate.DateOfBirth.ToString("dd/MM/yyyy"),
                 Email = candidate.Email,
                 LastName = candidate.LastName,
                 Name = candidate.Name,

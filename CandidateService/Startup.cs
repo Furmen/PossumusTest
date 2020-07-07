@@ -1,4 +1,6 @@
 using CandidateService.Database;
+using Domain.Repository.Interface;
+using Infraestructure.Repository.Implementation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -24,8 +26,9 @@ namespace CandidateService
 
             services.AddScoped<DatabaseContext>();
 
-            services.AddDbContext<DatabaseContext>(options =>
-                                                   options.UseSqlServer(Configuration.GetValue<string>("ConnectionStrings")));
+            services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(Configuration.GetValue<string>("ConnectionStrings")));
+
+            services.AddScoped<ICandidateRepository, CandidateRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

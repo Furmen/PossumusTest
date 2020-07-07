@@ -1,7 +1,7 @@
-﻿using CandidateService.Database.Entities;
-using Common.DTOs;
+﻿using Application.DTOs;
+using Domain.Entities;
 
-namespace CandidateService.Mapper
+namespace Application.Mapper
 {
     public static class JobMapper
     {

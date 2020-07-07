@@ -37,19 +37,19 @@
             {
                 <tr>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Name)
+                        @Html.ValueFor(modelItem => item.Name)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.LastName)
+                        @Html.ValueFor(modelItem => item.LastName)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.DateOfBirth)
+                        @Html.ValueFor(modelItem => item.DateOfBirth)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Email)
+                        @Html.ValueFor(modelItem => item.Email)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.PhoneNumber)
+                        @Html.ValueFor(modelItem => item.PhoneNumber)
                     </td>
                     <td>
                         <a asp-action="Edit" asp-route-id="@item.CandidateId">Edit</a> |

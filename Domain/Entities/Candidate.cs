@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace CandidateService.Database.Entities
+namespace Domain.Entities
 {
     public class Candidate
     {

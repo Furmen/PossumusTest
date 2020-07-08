@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Application.Command;
 using Application.DTOs;
 using Application.Query;
+using CandidateMVC.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json.Linq;
@@ -56,13 +57,19 @@ namespace CandidateService.Controllers
         // POST: Candidates/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CandidateId,Name,LastName,DateOfBirth,Email,PhoneNumber,Resume")] CandidateDTO candidate)
+        public async Task<IActionResult> Create([Bind("CandidateId,Name,LastName,DateOfBirth,Email,PhoneNumber,ResumeFile")] CandidateDTO candidate)
         {
             if (ModelState.IsValid)
             {
+                if (!FileUploadHelper.CheckFileExtension(candidate.ResumeFile, configuration.GetValue<string>("FileExtensions")))
+                    throw new Exception("File extension not valid. Please select .pdf or .doc or .docx files.");
+
+                candidate.Resume = await FileUploadHelper.CopyAndCreateFileAsync(candidate.ResumeFile);
+
                 await candidateCommand.ExecuteCommandAsync(configuration.GetValue<string>("BaseURLApi"), candidate, Method.POST);
                 return RedirectToAction(nameof(Index));
             }
+
             return View(candidate);
         }
 
@@ -80,7 +87,7 @@ namespace CandidateService.Controllers
         // POST: Candidates/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit([Bind("CandidateId,Name,LastName,DateOfBirth,Email,PhoneNumber,Resume")] CandidateDTO candidate)
+        public async Task<IActionResult> Edit([Bind("CandidateId,Name,LastName,DateOfBirth,Email,PhoneNumber,ResumeFile")] CandidateDTO candidate)
         {
             if (ModelState.IsValid)
             {

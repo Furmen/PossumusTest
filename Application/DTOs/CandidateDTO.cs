@@ -1,4 +1,4 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -35,11 +35,13 @@ namespace Application.DTOs
         [Display(Name = "Phone number")]
         public string PhoneNumber { get; set; }
 
-        [Required(ErrorMessage = "Resume is required")]
-        [DataType(DataType.Upload, ErrorMessage = "Resume invalid")]
         [Display(Name = "Resume")]
         public string Resume { get; set; }
 
+        public IFormFile ResumeFile { get; set; }
+
         public IEnumerable<JobDTO> Jobs { get; set; }
+
+        public string JobsJson { get; set; }
     }
 }

@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Application.DTOs;
 using Application.Mapper;
 using Domain.Repository.Interface;
+using Microsoft.Extensions.Configuration;
 
 namespace CandidateService.Controllers
 {
@@ -14,10 +15,13 @@ namespace CandidateService.Controllers
     public class CandidateController : ControllerBase
     {
         private readonly ICandidateRepository candidateRepository;
+        private readonly IConfiguration configuration;
 
-        public CandidateController(ICandidateRepository candidateRepository)
+        public CandidateController(ICandidateRepository candidateRepository,
+                                   IConfiguration configuration)
         {
             this.candidateRepository = candidateRepository;
+            this.configuration = configuration;
         }
 
         // GET: api/Candidate
@@ -42,11 +46,8 @@ namespace CandidateService.Controllers
 
         // PUT: api/Candidate/5
         [HttpPut("{id}")]
-        public IActionResult PutCandidate(int id, CandidateDTO candidate)
+        public IActionResult PutCandidate(CandidateDTO candidate)
         {
-            if (id != candidate.CandidateId)
-                return BadRequest();
-
             try
             {
                 candidateRepository.Update(candidate.ToEntity());

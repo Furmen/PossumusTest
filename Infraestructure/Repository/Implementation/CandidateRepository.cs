@@ -28,22 +28,22 @@ namespace Infraestructure.Repository.Implementation
             return candidate;
         }
 
-        public async void Update(Candidate candidate)
+        public void Update(Candidate candidate)
         {
             _context.Entry(candidate).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
         }
 
-        public async void Add(Candidate candidate)
+        public void Add(Candidate candidate)
         {
             _context.Candidates.Add(candidate);
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
         }
 
-        public async void Delete(Candidate candidate)
+        public void Delete(Candidate candidate)
         {
             _context.Candidates.Remove(candidate);
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Application.DTOs;
 using Domain.Entities;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -14,14 +15,17 @@ namespace Application.Mapper
             return new Candidate
             {
                 CandidateId = candidateDTO.CandidateId,
-                DateOfBirth = DateTime.ParseExact("dd/MM/yyyy", candidateDTO.DateOfBirth, CultureInfo.InvariantCulture),
+                DateOfBirth = DateTime.ParseExact(candidateDTO.DateOfBirth, "dd/MM/yyyy", CultureInfo.InvariantCulture),
                 Email = candidateDTO.Email,
                 LastName = candidateDTO.LastName,
                 Name = candidateDTO.Name,
                 PhoneNumber = candidateDTO.PhoneNumber,
                 Resume = candidateDTO.Resume,
-                Jobs = candidateDTO.Jobs != null && candidateDTO.Jobs.Any() ? 
-                            candidateDTO.Jobs.Select(s => s.ToEntity()) : new List<Job>()
+                Jobs = !string.IsNullOrEmpty(candidateDTO.JobsJson) ?
+                           JArray.Parse(candidateDTO.JobsJson).Select(s => new Job { 
+                                CompanyName = s.Value<string>("companyName"),
+                                Period = DateTime.ParseExact(s.Value<string>("period"), "dd/MM/yyyy", CultureInfo.InvariantCulture)
+                           }) : new List<Job>()
             };
         }
 

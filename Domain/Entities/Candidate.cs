@@ -35,6 +35,6 @@ namespace Domain.Entities
         [DataType(DataType.Upload, ErrorMessage = "Resume invalid")]
         public string Resume { get; set; }
 
-        public IEnumerable<Job> Jobs { get; set; }
+        public ICollection<Job> Jobs { get; set; }
     }
 }

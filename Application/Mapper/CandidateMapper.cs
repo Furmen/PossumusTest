@@ -1,6 +1,6 @@
 ﻿using Application.DTOs;
 using Domain.Entities;
-using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -12,20 +12,21 @@ namespace Application.Mapper
     {
         public static Candidate ToEntity(this CandidateDTO candidateDTO)
         {
+            ICollection<Job> jobs = new List<Job>();
+
+            if (!string.IsNullOrEmpty(candidateDTO.JobsJson))
+                jobs = JsonConvert.DeserializeObject<IEnumerable<JobDTO>>(candidateDTO.JobsJson).Select(s => s.ToEntity()).ToList();
+
             return new Candidate
             {
                 CandidateId = candidateDTO.CandidateId,
-                DateOfBirth = DateTime.ParseExact(candidateDTO.DateOfBirth, "dd/MM/yyyy", CultureInfo.InvariantCulture),
+                DateOfBirth = DateTime.ParseExact(candidateDTO.DateOfBirth, "yyyy-MM-dd", CultureInfo.InvariantCulture),
                 Email = candidateDTO.Email,
                 LastName = candidateDTO.LastName,
                 Name = candidateDTO.Name,
                 PhoneNumber = candidateDTO.PhoneNumber,
                 Resume = candidateDTO.Resume,
-                Jobs = !string.IsNullOrEmpty(candidateDTO.JobsJson) ?
-                           JArray.Parse(candidateDTO.JobsJson).Select(s => new Job { 
-                                CompanyName = s.Value<string>("companyName"),
-                                Period = DateTime.ParseExact(s.Value<string>("period"), "dd/MM/yyyy", CultureInfo.InvariantCulture)
-                           }) : new List<Job>()
+                Jobs = jobs
             };
         }
 
@@ -34,7 +35,7 @@ namespace Application.Mapper
             return new CandidateDTO
             {
                 CandidateId = candidate.CandidateId,
-                DateOfBirth = candidate.DateOfBirth.ToString("dd/MM/yyyy"),
+                DateOfBirth = candidate.DateOfBirth.ToString("yyyy-MM-dd"),
                 Email = candidate.Email,
                 LastName = candidate.LastName,
                 Name = candidate.Name,

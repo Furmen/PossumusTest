@@ -25,7 +25,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="DateOfBirth" class="control-label"></label>
-                <input asp-for="DateOfBirth" class="form-control" />
+                <input asp-for="DateOfBirth" class="form-control" type="date" data-date-format="dd/MM/yyyy" />
                 <span asp-validation-for="DateOfBirth" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -40,8 +40,32 @@
             </div>
             <div class="form-group">
                 <label asp-for="Resume" class="control-label"></label>
-                <input asp-for="Resume" class="form-control" />
+                <input asp-for="ResumeFile" type="file">
                 <span asp-validation-for="Resume" class="text-danger"></span>
+            </div>
+            <hr />
+            <div class="form-group">
+                <label asp-for="Jobs" class="control-label"></label>
+                <table id="Jobs">
+                    <thead>
+                        <tr>
+                            <th>Company Name</th>
+                            <th>Period</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (int i = 0; i < Model.Jobs.Count(); i++)
+                        {
+                            Model.Jobs.ElementAt(i).JobId = i;
+                            await Html.RenderPartialAsync("_CandidateJob", Model.Jobs.ElementAt(i));
+                        }
+                    </tbody>
+                </table>
+
+                <button type="button" onclick="addJob()">
+                    Add Job
+                </button>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />

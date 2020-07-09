@@ -6,6 +6,10 @@ namespace Application.Command
 {
     public interface ICandidateCommand
     {
-        Task ExecuteCommandAsync(string baseURL, CandidateDTO candidate, Method typeMethod);
+        Task CreateCommandAsync(string baseURL, CandidateDTO candidate);
+
+        Task EditCommandAsync(string baseURL, CandidateDTO candidate);
+
+        Task DeleteCommandAsync(string baseURL, int candidateId);
     }
 }

@@ -41,6 +41,7 @@
             <div class="form-group">
                 <label asp-for="Resume" class="control-label"></label>
                 <input asp-for="ResumeFile" type="file">
+                <input type="hidden" asp-for="Resume">
                 <span asp-validation-for="Resume" class="text-danger"></span>
             </div>
             <hr />
@@ -57,7 +58,7 @@
                     <tbody>
                         @for (int i = 0; i < Model.Jobs.Count(); i++)
                         {
-                            Model.Jobs.ElementAt(i).JobId = i;
+                            Model.Jobs.ElementAt(i).JobIndex = i;
                             await Html.RenderPartialAsync("_CandidateJob", Model.Jobs.ElementAt(i));
                         }
                     </tbody>

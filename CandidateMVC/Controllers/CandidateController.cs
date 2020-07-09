@@ -82,7 +82,7 @@ namespace CandidateService.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit([Bind("CandidateId,Name,LastName,DateOfBirth,Email,PhoneNumber,ResumeFile,Jobs")] CandidateDTO candidate)
+        public async Task<IActionResult> Edit([Bind("CandidateId,Name,LastName,DateOfBirth,Email,PhoneNumber,Resume,ResumeFile,Jobs")] CandidateDTO candidate)
         {
             if (ModelState.IsValid)
             {
@@ -123,7 +123,7 @@ namespace CandidateService.Controllers
         [HttpGet]
         public IActionResult GetPartialJob(int countJobs)
         {
-            return PartialView("_CandidateJob", new JobDTO { JobId = countJobs, CompanyName = "", Period = DateTime.Now });
+            return PartialView("_CandidateJob", new JobDTO { JobIndex = countJobs, JobId = 0, CompanyName = "", Period = "Desde " + DateTime.Now.ToString("dd/MM/yyyy") + ", Hasta " + DateTime.Now.AddYears(1).ToString("dd/MM/yyyy") });
         }
     }
 }

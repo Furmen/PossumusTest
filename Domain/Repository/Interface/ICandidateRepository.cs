@@ -15,5 +15,7 @@ namespace Domain.Repository.Interface
         void Add(Candidate candidate);
 
         void Delete(Candidate candidate);
+
+        void RemovePreviousJobsById(int candidateId);
     }
 }

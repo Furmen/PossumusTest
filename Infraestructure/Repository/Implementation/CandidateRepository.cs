@@ -3,6 +3,7 @@ using Domain.Entities;
 using Domain.Repository.Interface;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Infraestructure.Repository.Implementation
@@ -30,8 +31,16 @@ namespace Infraestructure.Repository.Implementation
 
         public void Update(Candidate candidate)
         {
-            _context.Entry(candidate).State = EntityState.Modified;
-            _context.SaveChanges();
+            try
+            {
+                _context.Entry(candidate).State = EntityState.Modified;
+                _context.SaveChanges();
+            }
+            catch (System.Exception ex)
+            {
+
+                throw;
+            }
         }
 
         public void Add(Candidate candidate)
@@ -43,6 +52,13 @@ namespace Infraestructure.Repository.Implementation
         public void Delete(Candidate candidate)
         {
             _context.Candidates.Remove(candidate);
+            _context.SaveChanges();
+        }
+
+        public void RemovePreviousJobsById(int candidateId)
+        {
+            var candidate = _context.Candidates.Include(inc => inc.Jobs).FirstOrDefault(e => e.CandidateId == candidateId);
+            _context.Jobs.RemoveRange(candidate.Jobs);
             _context.SaveChanges();
         }
     }

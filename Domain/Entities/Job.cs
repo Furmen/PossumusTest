@@ -13,9 +13,7 @@ namespace Domain.Entities
         public string CompanyName { get; set; }
 
         [Required(ErrorMessage = "Period is required")]
-        [DataType(DataType.Date, ErrorMessage = "Period invalid")]
-        [DisplayFormat(DataFormatString = "dd/MM/yyyy")]
-        public DateTime Period { get; set; }
+        public string Period { get; set; }
 
         public Candidate Candidate { get; set; }
     }

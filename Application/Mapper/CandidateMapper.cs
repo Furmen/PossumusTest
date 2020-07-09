@@ -30,6 +30,24 @@ namespace Application.Mapper
             };
         }
 
+        public static Candidate ToEntityForUpdate(this Candidate candidate, CandidateDTO candidateDTO)
+        {
+            ICollection<Job> jobs = new List<Job>();
+
+            if (!string.IsNullOrEmpty(candidateDTO.JobsJson))
+                jobs = JsonConvert.DeserializeObject<IEnumerable<JobDTO>>(candidateDTO.JobsJson).Select(s => s.ToEntity()).ToList();
+
+            candidate.DateOfBirth = DateTime.ParseExact(candidateDTO.DateOfBirth, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+            candidate.Email = candidateDTO.Email;
+            candidate.LastName = candidateDTO.LastName;
+            candidate.Name = candidateDTO.Name;
+            candidate.PhoneNumber = candidateDTO.PhoneNumber;
+            candidate.Resume = candidateDTO.Resume;
+            candidate.Jobs = jobs;
+
+            return candidate;
+        }
+
         public static CandidateDTO ToDTO(this Candidate candidate)
         {
             return new CandidateDTO

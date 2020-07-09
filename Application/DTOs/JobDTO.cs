@@ -15,6 +15,8 @@ namespace Application.DTOs
         [Required(ErrorMessage = "Period is required")]
         [DataType(DataType.Date, ErrorMessage = "Period invalid")]
         [DisplayFormat(DataFormatString = "dd/MM/yyyy")]
-        public DateTime Period { get; set; }
+        public string Period { get; set; }
+
+        public int JobIndex { get; set; }
     }
 }

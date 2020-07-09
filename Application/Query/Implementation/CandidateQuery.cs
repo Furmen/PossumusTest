@@ -31,7 +31,7 @@ namespace Application.Query
                 Jobs = s.Value<JArray>("jobs").Select(s => new JobDTO { 
                     JobId = s.Value<int>("jobId"),
                     CompanyName = s.Value<string>("companyName"),
-                    Period = s.Value<DateTime>("period")
+                    Period = s.Value<string>("period")
                 })
             }).ToList();
         }
@@ -58,7 +58,7 @@ namespace Application.Query
                 {
                     JobId = s.Value<int>("jobId"),
                     CompanyName = s.Value<string>("companyName"),
-                    Period = s.Value<DateTime>("period")
+                    Period = s.Value<string>("period")
                 })
             };
         }

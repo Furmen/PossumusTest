@@ -2,13 +2,13 @@
 
 <tr>
     <td style="display: none;">
-        <input type="number" readonly="readonly" disabled="disabled" name="Jobs[@Model.JobId].JobId" value="@Model.JobId" maxlength="50" />
+        <input type="number" readonly="readonly" disabled="disabled" name="Jobs[@Model.JobIndex].JobId" value="@Model.JobId" maxlength="50" />
     </td>
     <td>
-        <input type="text" name="Jobs[@Model.JobId].CompanyName" value="@Model.CompanyName" maxlength="50" />
+        <input type="text" name="Jobs[@Model.JobIndex].CompanyName" value="@Model.CompanyName" maxlength="50" />
     </td>
     <td>
-        <input type="date" name="Jobs[@Model.JobId].Period" value="@Model.Period.ToString("MM/dd/yyyy")" data-date-format="dd/MM/yyyy" />
+        <input type="text" name="Jobs[@Model.JobIndex].Period" value="@Model.Period" placeholder="Desde dd/mm/yyyy Hasta dd/mm/yyyy" />
     </td>
     <td>
         <button type="button" class="btn btn-danger btn-delete" onclick="deleteRow(this);">Delete</button>

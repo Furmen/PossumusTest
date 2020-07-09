@@ -7,6 +7,8 @@ using Application.DTOs;
 using Application.Mapper;
 using Domain.Repository.Interface;
 using Microsoft.Extensions.Configuration;
+using System.Globalization;
+using System;
 
 namespace CandidateService.Controllers
 {
@@ -44,13 +46,19 @@ namespace CandidateService.Controllers
             return candidate.ToDTO();
         }
 
-        // PUT: api/Candidate/5
-        [HttpPut("{id}")]
-        public IActionResult PutCandidate(CandidateDTO candidate)
+        // PUT: api/Candidate
+        [HttpPut]
+        public async Task<IActionResult> PutCandidateAsync(CandidateDTO candidate)
         {
             try
             {
-                candidateRepository.Update(candidate.ToEntity());
+                candidateRepository.RemovePreviousJobsById(candidate.CandidateId);
+
+                var candidateUpdated = await candidateRepository.GetById(candidate.CandidateId);
+
+                candidateUpdated.ToEntityForUpdate(candidate);
+
+                candidateRepository.Update(candidateUpdated);
             }
             catch (DbUpdateConcurrencyException ex)
             {

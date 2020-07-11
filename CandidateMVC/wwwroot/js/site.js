@@ -12,4 +12,13 @@ function addJob() {
 function deleteRow(btnDeleteRow) {
     var tr = $(btnDeleteRow).closest("tr");
     $(tr).remove();
+    rebuildIndex();
+}
+
+function rebuildIndex() {
+    $(".partialJobs").each(function (i, itemJob) {
+        $(itemJob).find("[name^='Jobs[']").each(function () {
+            $(this).attr("name", "Jobs[" + i + "]." + $(this).attr("id"));
+        });
+    });
 }

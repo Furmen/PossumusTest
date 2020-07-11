@@ -56,7 +56,7 @@ namespace CandidateService.Controllers
 
                 var candidateUpdated = await candidateRepository.GetById(candidate.CandidateId);
 
-                candidateUpdated.ToEntityForUpdate(candidate);
+                candidate.ToEntity(candidateUpdated);
 
                 candidateRepository.Update(candidateUpdated);
             }

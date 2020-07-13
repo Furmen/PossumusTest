@@ -8,7 +8,7 @@ namespace Domain.Repository.Interface
     {
         Task<IEnumerable<Candidate>> GetAllAsync();
 
-        Task<Candidate> GetById(int id);
+        Task<Candidate> GetByIdAsync(int id);
 
         void Update(Candidate candidate);
 

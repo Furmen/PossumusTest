@@ -22,7 +22,7 @@ namespace Infraestructure.Repository.Implementation
             return await _context.Candidates.Include(inc => inc.Jobs).ToListAsync();
         }
 
-        public async Task<Candidate> GetById(int id)
+        public async Task<Candidate> GetByIdAsync(int id)
         {
             var candidate = await _context.Candidates.Include(inc => inc.Jobs)
                                                          .FirstOrDefaultAsync(e => e.CandidateId == id);
@@ -31,16 +31,8 @@ namespace Infraestructure.Repository.Implementation
 
         public void Update(Candidate candidate)
         {
-            try
-            {
-                _context.Entry(candidate).State = EntityState.Modified;
-                _context.SaveChanges();
-            }
-            catch (System.Exception ex)
-            {
-
-                throw;
-            }
+            _context.Entry(candidate).State = EntityState.Modified;
+            _context.SaveChanges();
         }
 
         public void Add(Candidate candidate)

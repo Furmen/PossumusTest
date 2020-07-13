@@ -123,7 +123,7 @@ namespace CandidateService.Controllers
         [HttpGet]
         public IActionResult GetPartialJob(int countJobs)
         {
-            return PartialView("_CandidateJob", new JobDTO { JobIndex = countJobs, JobId = 0, CompanyName = "", Period = "Desde " + DateTime.Now.ToString("dd/MM/yyyy") + ", Hasta " + DateTime.Now.AddYears(1).ToString("dd/MM/yyyy") });
+            return PartialView("_CandidateJob", new JobDTO { JobIndex = countJobs, JobId = 0, CompanyName = "", Period = "" });
         }
     }
 }
